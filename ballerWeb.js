@@ -177,6 +177,12 @@ define("view/NativeView", ["require", "exports"], function (require, exports) {
                                 }
                             }
                         }
+                        else {
+                            // if we got a move event that we ignored due to capture mode, we need to
+                            // synthesize up event
+                            _this._bDown = false;
+                            _this.onUp(_this._lastX, _this._lastY);
+                        }
                     }
                 }
             });
@@ -265,6 +271,10 @@ define("view/NativeLabel", ["require", "exports", "view/NativeView"], function (
         NativeLabel.prototype.create = function () {
             var e = document.createElement("div");
             e.style.userSelect = "none";
+            // these are needed in Safari to prevent text selection and I-Beam cursor when dragging
+            e.style.webkitUserSelect = "none";
+            e.style.cursor = 'default';
+            e.onselectstart = function () { return false; };
             return e;
         };
         NativeLabel.prototype.text = function (text) {
@@ -322,10 +332,6 @@ define("platform/NativeCollection", ["require", "exports", "view/NativeView"], f
         NativeCollection.prototype.setContentSize = function (w, h) {
             this._posXMax = w - this.width();
             this._posYMax = h - this.height();
-            if (this._posXMax === 0 && this._posXMax === 0) {
-                this._captureMode = "n";
-                console.log("non scrollable");
-            }
         };
         NativeCollection.prototype.getView = function (i) {
             var v = this._activeViews.get(i);
@@ -447,12 +453,13 @@ define("view/NativeList", ["require", "exports", "platform/NativeCollection"], f
     exports.NativeList = void 0;
     var NativeList = /** @class */ (function (_super) {
         __extends(NativeList, _super);
-        function NativeList() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+        function NativeList(native) {
+            var _this = _super.call(this, native) || this;
             _this._viewWidth = 0;
             _this._viewHeight = 0;
             _this._bHorizontal = false;
             _this._count = 0;
+            _this._captureMode = "v";
             return _this;
         }
         NativeList.prototype.setHorizontal = function (bHorizontal) {

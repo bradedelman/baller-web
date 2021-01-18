@@ -45,11 +45,6 @@ export class NativeCollection extends NativeView {
     setContentSize(w: number, h: number) {
         this._posXMax = w - this.width();
         this._posYMax = h - this.height();
-
-        if (this._posXMax === 0 && this._posXMax === 0) {
-            this._captureMode = "n";
-            console.log("non scrollable");
-        }
     }
 
     getView(i: number) {

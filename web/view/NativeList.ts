@@ -1,4 +1,5 @@
 import {NativeCollection} from "../platform/NativeCollection";
+import {Native} from "../platform/Native";
 
 export class NativeList extends NativeCollection {
 
@@ -6,6 +7,11 @@ export class NativeList extends NativeCollection {
     _viewHeight : number = 0;
     _bHorizontal: boolean = false;
     _count: number = 0;
+
+    constructor(native: Native) {
+        super(native);
+        this._captureMode = "v";
+    }
 
     setHorizontal(bHorizontal: boolean) {
         this._bHorizontal = bHorizontal;

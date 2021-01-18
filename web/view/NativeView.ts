@@ -112,6 +112,11 @@ export class NativeView {
                                 other.onUp(other._lastX, other._lastY);
                             }
                         }
+                    } else {
+                        // if we got a move event that we ignored due to capture mode, we need to
+                        // synthesize up event
+                        this._bDown = false;
+                        this.onUp(this._lastX, this._lastY);
                     }
                 }
             }
