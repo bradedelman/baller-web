@@ -14,9 +14,14 @@ export class NativeButton extends NativeView {
         this._e.innerText = text;
     }
 
-    font(url: string, size: number) {
+    fontFace(url: string, bSystem: boolean) {
+        if (bSystem) {
+            url = "https://www.cleverfocus.com/baller/" + url;
+        }
         this._e.style.fontFamily = this._native._fonts.getFont(url);
-        this._e.style.fontSize = size+"px";
     }
 
+    fontSize(size: number) {
+        this._e.style.fontSize = size+"px";
+    }
 }

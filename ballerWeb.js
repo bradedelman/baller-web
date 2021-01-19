@@ -763,8 +763,13 @@ define("view/NativeButton", ["require", "exports", "view/NativeView"], function 
         NativeButton.prototype.text = function (text) {
             this._e.innerText = text;
         };
-        NativeButton.prototype.font = function (url, size) {
+        NativeButton.prototype.fontFace = function (url, bSystem) {
+            if (bSystem) {
+                url = "https://www.cleverfocus.com/baller/" + url;
+            }
             this._e.style.fontFamily = this._native._fonts.getFont(url);
+        };
+        NativeButton.prototype.fontSize = function (size) {
             this._e.style.fontSize = size + "px";
         };
         return NativeButton;
