@@ -1,4 +1,4 @@
-# Baller for Web (Alpha 0.1)
+# Baller for Web (Alpha 0.0.2)
 
 Baller is a cross-platform View Framework.  It's not an Application framework, it's just a way to implement a view e.g. a "User Interface Screen".  
 
@@ -36,7 +36,7 @@ Create a file index.html with these contents.  The comments explain it all.  Ver
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
 
 <!-- Baller -->
-<script src="https://cdn.jsdelivr.net/gh/bradedelman/baller-web@latest/ballerWeb.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/bradedelman/baller-web@0.0.2/ballerWeb.js"></script>
 
 <!-- Create a Div with an ID for the Baller View -->
 <div id="root1" style="border: solid black; position: absolute; overflow: hidden; width: 400px; height: 840px;">
