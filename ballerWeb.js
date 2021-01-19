@@ -12,8 +12,8 @@ var Baller;
     // host platform to inject func for...
     // Baller.getNative(contextId)
     var gContexts = {};
-    function create(nativeId, jsTypeId) {
-        return gContexts[nativeId].create(jsTypeId);
+    function create(nativeId, jsTypeId, parentId) {
+        return gContexts[nativeId].create(jsTypeId, parentId);
     }
     Baller.create = create;
     function call(nativeId, id, method) {
@@ -280,8 +280,13 @@ define("view/NativeLabel", ["require", "exports", "view/NativeView"], function (
         NativeLabel.prototype.text = function (text) {
             this._e.innerText = text;
         };
-        NativeLabel.prototype.font = function (url, size) {
+        NativeLabel.prototype.fontFace = function (url, bSystem) {
+            if (bSystem) {
+                url = "https://www.cleverfocus.com/baller/" + url;
+            }
             this._e.style.fontFamily = this._native._fonts.getFont(url);
+        };
+        NativeLabel.prototype.fontSize = function (size) {
             this._e.style.fontSize = size + "px";
         };
         return NativeLabel;
@@ -341,7 +346,7 @@ define("platform/NativeCollection", ["require", "exports", "view/NativeView"], f
                 }
                 else {
                     // @ts-ignore
-                    v = this._native.jsCreate(this._viewTypeId, this._canvas.id);
+                    v = this._native.jsCreate(this._viewTypeId, this._id);
                 }
                 // POPULATE
                 v.jsCall("onPopulate", i, this._id);
@@ -661,8 +666,13 @@ define("view/NativeField", ["require", "exports", "view/NativeView"], function (
         NativeField.prototype.value = function () {
             return this._e["value"];
         };
-        NativeField.prototype.font = function (url, size) {
+        NativeField.prototype.fontFace = function (url, bSystem) {
+            if (bSystem) {
+                url = "https://www.cleverfocus.com/baller/" + url;
+            }
             this._e.style.fontFamily = this._native._fonts.getFont(url);
+        };
+        NativeField.prototype.fontSize = function (size) {
             this._e.style.fontSize = size + "px";
         };
         return NativeField;
@@ -833,9 +843,10 @@ define("platform/Native", ["require", "exports", "view/NativeView", "view/Native
             this._services.set("NativeStore", this._store);
             this._services.set("NativeHost", new NativeHost_1.NativeHost(this));
         };
-        Native.prototype.jsCreate = function (jsTypeId) {
+        Native.prototype.jsCreate = function (jsTypeId, parentId) {
+            if (parentId === void 0) { parentId = null; }
             // @ts-ignore
-            var viewId = Baller.create(this._nativeId, jsTypeId);
+            var viewId = Baller.create(this._nativeId, jsTypeId, parentId);
             var nv = this._views.get(viewId);
             return nv;
         };

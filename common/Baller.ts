@@ -7,9 +7,9 @@ namespace Baller {
 
 	var gContexts = {};
 
-	export function create(nativeId, jsTypeId)
+	export function create(nativeId, jsTypeId, parentId)
 	{
-		return gContexts[nativeId].create(jsTypeId);
+		return gContexts[nativeId].create(jsTypeId, parentId);
 	}
 
 	export function call(nativeId, id, method, ...args)

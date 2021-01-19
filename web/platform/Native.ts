@@ -48,10 +48,10 @@ export class Native implements NativeInterface {
         this._services.set("NativeHost", new NativeHost(this));
     }
 
-    jsCreate(jsTypeId: string):NativeView
+    jsCreate(jsTypeId: string, parentId: string = null):NativeView
     {
         // @ts-ignore
-        let viewId = Baller.create(this._nativeId, jsTypeId);
+        let viewId = Baller.create(this._nativeId, jsTypeId, parentId);
         let nv = this._views.get(viewId);
         return nv;
     }

@@ -54,7 +54,7 @@ export class NativeCollection extends NativeView {
                 v = this._recycleViews.pop();
             } else {
                 // @ts-ignore
-                v = this._native.jsCreate(this._viewTypeId, this._canvas.id);
+                v = this._native.jsCreate(this._viewTypeId, this._id);
             }
 
             // POPULATE
