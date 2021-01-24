@@ -311,9 +311,9 @@ define("platform/NativeCollection", ["require", "exports", "view/NativeView"], f
             _this._toRemove = new Set();
             _this._inView = new Map();
             _this._posX = 0;
-            _this._posXMax = 0;
+            _this._contentWidth = undefined;
             _this._posY = 0;
-            _this._posYMax = 0;
+            _this._contentHeight = undefined;
             _this._viewTypeId = 0;
             return _this;
         }
@@ -335,8 +335,8 @@ define("platform/NativeCollection", ["require", "exports", "view/NativeView"], f
             this._viewTypeId = viewTypeId;
         };
         NativeCollection.prototype.setContentSize = function (w, h) {
-            this._posXMax = w - this.width();
-            this._posYMax = h - this.height();
+            this._contentWidth = w;
+            this._contentHeight = h;
         };
         NativeCollection.prototype.getView = function (i) {
             var v = this._activeViews.get(i);
@@ -380,10 +380,23 @@ define("platform/NativeCollection", ["require", "exports", "view/NativeView"], f
         NativeCollection.prototype.clampTrunc = function (n, min, max) {
             return Math.trunc(Math.max(min, Math.min(max, n)));
         };
+        NativeCollection.prototype.setBounds = function (x, y, w, h) {
+            _super.prototype.setBounds.call(this, x, y, w, h);
+            // when our bounds change, be sure correct children shown
+            this.scrollTo(this._posX, this._posY, false);
+        };
         NativeCollection.prototype.scrollTo = function (x, y, bAnimate) {
             var _this = this;
-            this._posX = this.clampTrunc(x, -this._posXMax, 0);
-            this._posY = this.clampTrunc(y, -this._posYMax, 0);
+            if (this._contentWidth === undefined || this.width() === undefined) {
+                return;
+            }
+            if (this._contentHeight === undefined || this.height() === undefined) {
+                return;
+            }
+            var posXMax = this._contentWidth - this.width();
+            var posYMax = this._contentHeight - this.height();
+            this._posX = this.clampTrunc(x, -posXMax, 0);
+            this._posY = this.clampTrunc(y, -posYMax, 0);
             // get what items are in view
             this.getInView(this._posX, this._posY, this.width(), this.height());
             // remove items that aren't in view anymore (any previous Set is irrelevant, since we're scrolling again before removal)

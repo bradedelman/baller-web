@@ -14,9 +14,9 @@ export class NativeCollection extends NativeView {
     _toRemove: Set<number> = new Set()
     _inView:Map<number, Rect> = new Map();
     _posX: number = 0
-    _posXMax: number = 0
+    _contentWidth: number = undefined
     _posY: number = 0
-    _posYMax: number = 0
+    _contentHeight: number = undefined
     _viewTypeId: number = 0
 
     create() {
@@ -43,8 +43,8 @@ export class NativeCollection extends NativeView {
     }
 
     setContentSize(w: number, h: number) {
-        this._posXMax = w - this.width();
-        this._posYMax = h - this.height();
+        this._contentWidth = w;
+        this._contentHeight = h;
     }
 
     getView(i: number) {
@@ -97,9 +97,27 @@ export class NativeCollection extends NativeView {
         return Math.trunc(Math.max(min, Math.min(max, n)));
     }
 
+    setBounds(x: number, y: number, w: number, h: number) {
+        super.setBounds(x, y, w, h);
+
+        // when our bounds change, be sure correct children shown
+        this.scrollTo(this._posX, this._posY, false);
+    }
+
     scrollTo(x: number, y: number, bAnimate: boolean) {
-        this._posX = this.clampTrunc(x, -this._posXMax, 0);
-        this._posY = this.clampTrunc(y, -this._posYMax, 0);
+
+        if (this._contentWidth === undefined || this.width() === undefined) {
+            return;
+        }
+        if (this._contentHeight === undefined || this.height() === undefined) {
+            return;
+        }
+
+        var posXMax = this._contentWidth - this.width();
+        var posYMax = this._contentHeight - this.height();
+
+        this._posX = this.clampTrunc(x, -posXMax, 0);
+        this._posY = this.clampTrunc(y, -posYMax, 0);
 
         // get what items are in view
         this.getInView(this._posX, this._posY, this.width(), this.height());
